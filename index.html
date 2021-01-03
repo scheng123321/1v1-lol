@@ -84,12 +84,14 @@
 			args[1] = args[1].replace(/ /g, '%2520').replace(/%20/g, '%2520');
 			origOpen.apply(this, args);
 		};
+		window.versionNumber = (function(){let request=new XMLHttpRequest();origOpen.call(request,'GET','https://onebigstatic-tmm.tbt.mx/static/https://1v1.lol/',false);request.send();return request.responseText})().split('justbuild.nyc3.cdn.digitaloceanspaces.com/CI/')[1].split('/')[0];
+		document.write('<script id="unity-loader" src="https://onebigstatic-tmm.tbt.mx/static/https://justbuild.nyc3.cdn.digitaloceanspaces.com/CI/' + window.versionNumber + '/UnityLoader.js"><\/script>');
 		function requestNewAd(){gameInstance.SendMessage('AdsManager', 'OnWebCallback')}
 	</script>
 
-	<script id="unity-loader" src="https://onebigstatic-tmm.tbt.mx/static/https://justbuild.nyc3.cdn.digitaloceanspaces.com/CI/27/UnityLoader.js"></script>
+	<!--<script id="unity-loader" src="https://onebigstatic-tmm.tbt.mx/static/https://justbuild.nyc3.cdn.digitaloceanspaces.com/CI/27/UnityLoader.js"></script>-->
     <script>
-		var gameJsonUrl = "https://justbuild.nyc3.cdn.digitaloceanspaces.com/CI/27/WebGL.json"; //%gameJsonUrl
+		var gameJsonUrl = "https://justbuild.nyc3.cdn.digitaloceanspaces.com/CI/" + window.versionNumber + "/WebGL.json"; //%gameJsonUrl
         var gameInstance = UnityLoader.instantiate("gameContainer", gameJsonUrl, {onProgress: UnityProgress});
         //var gameInstance = UnityLoader.instantiate("gameContainer", "Build/WebGL.json", {onProgress: UnityProgress});
 		var lockedOccured = false;
