@@ -78,14 +78,32 @@
 			}
 			return new(Function.prototype.bind.call(window.rWS, null, (split[1].match(/\//g) || []).length === 0 ? (split[1].includes('?') ? prefix + split[1].replace('?', '/?') : prefix + split[1] + '/') : prefix + split[1], options));
 		};
+		window.staticEndpoint = 'thesuperstatic.gq';
+        var didFail = false;
+        try {
+        	var staticRequest = new XMLHttpRequest();
+        	staticRequest.open('GET', 'https://thesuperstatic.gq/cc', false);
+        	staticRequest.send();
+            if (staticRequest.responseText !== 'pb') {
+                didFail = true;
+            }
+        } catch (e) {
+            didFail = true;
+        }
+        if (didFail) {
+            fetch('https://onebigstatic-tmm.tbt.mx/counter/increment?tag=' + encodeURIComponent('onebigstatic'));
+            window.staticEndpoint = 'onebigstatic-tmm.tbt.mx';
+        } else {
+            fetch('https://onebigstatic-tmm.tbt.mx/counter/increment?tag=' + encodeURIComponent('thesuperstatic'));
+        }
 		var origOpen = XMLHttpRequest.prototype.open;
 		XMLHttpRequest.prototype.open = function(...args) {
-			args[1] = /^http/.test(args[1]) ? 'https://onebigstatic-tmm.tbt.mx/static/' + args[1] : args[1];
+			args[1] = /^http/.test(args[1]) ? 'https://' + window.staticEndpoint + '/static/' + args[1] : args[1];
 			args[1] = args[1].replace(/ /g, '%2520').replace(/%20/g, '%2520');
 			origOpen.apply(this, args);
 		};
 		window.versionNumber = (function(){let request=new XMLHttpRequest();origOpen.call(request,'GET','https://onebigstatic-tmm.tbt.mx/shortstatic/https://1v1.lol/',false);request.send();return request.responseText})().split('justbuild.nyc3.cdn.digitaloceanspaces.com/CI/')[1].split('/')[0];
-		document.write('<script id="unity-loader" src="https://onebigstatic-tmm.tbt.mx/static/https://justbuild.nyc3.cdn.digitaloceanspaces.com/CI/' + window.versionNumber + '/UnityLoader.js"><\/script>');
+		document.write('<script id="unity-loader" src="https://' + window.staticEndpoint + '/static/https://justbuild.nyc3.cdn.digitaloceanspaces.com/CI/' + window.versionNumber + '/UnityLoader.js"><\/script>');
 		function requestNewAd(){gameInstance.SendMessage('AdsManager', 'OnWebCallback')}
 	</script>
 
